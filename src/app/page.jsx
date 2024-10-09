@@ -1,16 +1,16 @@
 'use client'
 
-import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Home() {
-  const router = useRouter();
-
-  useEffect(() => {
-    router.push('/usermng');
-  }, [router])
-
   return (
-    <></>
+    <div className="w-screen h-screen flex items-center justify-center">
+      <Link href={'usermng'}>
+        <Button>
+          Click to view users
+        </Button>
+      </Link>
+    </div>
   )
 }

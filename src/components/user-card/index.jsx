@@ -44,14 +44,14 @@ function UserCard({ user }) {
 
     async function handleSubmit()
     {
-        if (!check(form))
-        {
-            console.log("Inavlid details");
-            return;
-        }
+        setLoading(true);
 
         try {
-            setLoading(true);
+            if (!check(form))
+            {
+                console.log("Inavlid details");
+                return;
+            }
 
             const response = await editUser(user._id, form, '/usermng');
 
@@ -176,7 +176,7 @@ function UserCard({ user }) {
                     </div>
 
                     <DialogFooter>
-                        <Button type="submit">
+                        <Button onClick={() => setLoading(true)} type="submit">
                             {
                                 loading? "Saving..." :
                                 "Save"

@@ -33,14 +33,13 @@ function AddNewUser() {
 
     async function handleSubmit()
     {
-        if (!check(form))
-        {
-            console.log("Inavlid details");
-            return;
-        }
-
         try {
-            setLoading(true);
+            if (!check(form))
+            {
+                console.log("Inavlid details");
+                return;
+            }
+            
             const response = await addNewUser(form, '/usermng');       
 
             if (!response.success) {
@@ -129,7 +128,7 @@ function AddNewUser() {
                     </div>
 
                     <DialogFooter>
-                        <Button type="submit">
+                        <Button type="submit" onClick={() => setLoading(true)}>
                             {
                                 loading? "Saving..." :
                                 "Create"
