@@ -2,6 +2,8 @@ import { fetchUsers } from '@/actions'
 import AddNewUser from '@/components/add-new-user'
 import UserCard from '@/components/user-card'
 
+export const revalidate = 0;
+
 async function UserMng() {
   const response = await fetchUsers();
   const users = response.data;
