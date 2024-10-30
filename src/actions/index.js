@@ -2,6 +2,7 @@
 
 import dbConnect from "@/db"
 import userModel from "@/db/models/user.model"
+import pusher from "@/pusher"
 import Joi from "joi"
 import { revalidatePath } from "next/cache"
 
@@ -40,8 +41,12 @@ async function addNewUser(form, pathToRevalidate)
         // newUser._id = newUser._id.toString();
         // delete newUser.__v;
 
+        pusher.trigger('user-channel', 'user-added', {
+            user: newUser
+        })
+
         response = { data: JSON.parse(JSON.stringify(newUser)) };;
-        revalidatePath(pathToRevalidate);
+        // revalidatePath(pathToRevalidate);
     }
     catch(err) {
         console.log(err.message);
@@ -93,8 +98,12 @@ async function deleteUser(id, pathToRevalidate)
             return;
         }
 
+        pusher.trigger('user-channel', 'user-deleted', {
+            userId: id
+        })
+
         response = { success: true, message: "User deleted" };
-        revalidatePath(pathToRevalidate);
+        // revalidatePath(pathToRevalidate);
     }
     catch(err) {
         console.log(err.message);
@@ -120,16 +129,22 @@ async function editUser(id, form, pathToRevalidate)
             return;
         }
 
-        const updatedUser = await userModel.findByIdAndUpdate(id, form);
+        const userr = await userModel.findByIdAndUpdate(id, form);
 
-        if (!updatedUser)
+        if (!userr)
         {
             response = { success: false, message: "User not found" };
             return;
         }
 
+        const updatedUser = await userModel.findById(id);
+
+        pusher.trigger('user-channel', 'user-updated', {
+            user: updatedUser
+        })
+
         response = { success: true, message: "User details updated" };
-        revalidatePath(pathToRevalidate);
+        // revalidatePath(pathToRevalidate);
     }
     catch(err) {
         console.log(err.message);
